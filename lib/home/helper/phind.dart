@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class phind extends StatelessWidget {
   const phind({super.key, required this.value});
-  final value;
+  final double value;
 
   @override
   Widget build(BuildContext context) {

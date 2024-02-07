@@ -79,8 +79,9 @@ class _chartState extends State<chart> {
 
     final themeProvider = Provider.of<ThemeProvider>(context);
     Color color = themeProvider.isDark ? Colors.white : Colors.black;
+
     List<Widget> widgetList(li, found) => [
-          lastvalue(width, height, li[0][1], found.last.key, widget.sider,
+          lastvalue(width, height, widget.last, found.last.key, widget.sider,
               isPortrait),
           Expanded(
             child: Container(
@@ -183,7 +184,7 @@ class _chartState extends State<chart> {
                   String search = 'PH';
                   widget.wanted == 'temperature'
                       ? search = 'TEMP'
-                      : widget.wanted == 'salanity'
+                      : widget.wanted == 'salinity'
                           ? search = 'TDS'
                           : widget.wanted == 'oxygen level'
                               ? search = 'DO'
@@ -196,8 +197,8 @@ class _chartState extends State<chart> {
                       for (var index = 0; index < 10; index++) {
                         double sum = 0;
                         for (var i = 1; i < 25; i++) {
-                          sum +=
-                              double.parse(list[length - i][search].toString());
+                          String value = list[length - i][search].toString();
+                          sum += double.parse(value != "null" ? value : "0");
                         }
                         li.add([index, (sum / 24)]);
                         length -= 25;
@@ -207,7 +208,8 @@ class _chartState extends State<chart> {
                       for (var index = 0; index < run / 25; index++) {
                         double sum = 0;
                         for (var i = 1; i < (run < 25 ? run : 25); i++) {
-                          sum += double.parse(list[run - i][search].toString());
+                          String value = list[length - i][search].toString();
+                          sum += double.parse(value != "null" ? value : "0");
                         }
                         run -= 25;
                         li.add([index, (sum / 24)]);
@@ -218,19 +220,19 @@ class _chartState extends State<chart> {
                     }
                   } else {
                     li = [];
-                    print(list.length);
-                    if (length > 0) {
-                      for (var index = 1;
-                          index < (length < 25 ? length : 25);
-                          index++) {
-                        li.add([
-                          index,
-                          double.parse(
-                              list[list.length - index][search].toString())
-                        ]);
-                      }
+                    for (var index = length - 1;
+                        index >= (length - 26);
+                        index--) {
+                      String value = list[index][search].toString();
+                      // print(value);
+                      li.add([
+                        length - index,
+                        double.parse(value != "null" ? value : "0")
+                      ]);
                     }
+                    li = li.reversed.toList();
                   }
+                  print(search);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

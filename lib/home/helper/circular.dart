@@ -25,8 +25,8 @@ class circularIndicator extends StatelessWidget {
             ),
             shape: BoxShape.circle),
         child: LiquidCircularProgressIndicator(
-          value: tds / 100,
-          valueColor: tds >= 40 && tds <= 60
+          value: tds / 32,
+          valueColor: tds == 0
               ? const AlwaysStoppedAnimation(Colors.green)
               : const AlwaysStoppedAnimation(Colors.red),
           borderWidth: 0,

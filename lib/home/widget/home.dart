@@ -42,18 +42,19 @@ class mainHomeList extends StatelessWidget {
             double TEMP = double.parse(data['TEMP'].toString());
             double DO = double.parse(data['DO'].toString());
             double TDS = double.parse(data['TDS'].toString());
+            // print("$PH, $TEMP, $DO, $TDS");
 
             // display check
             bool PHShow = (PH > 0.0);
             bool DOShow = (DO > 0.0);
             bool TEMPShow = (TEMP > 0.0);
-            bool TDSShow = (TDS > 0.0);
+            bool TDSShow = (TDS >= 0.0);
 
             double TEMPpercentage =
                 double.parse(data['TEMP'].toString()) / 50.0;
 
             // display string
-            String PHString, TEMPString, DOString;
+            String PHString, TEMPString, DOString, TDSString;
 
             if (PH > 6.5 && PH <= 7.5) {
               PHString = "Neutral";
@@ -88,6 +89,15 @@ class mainHomeList extends StatelessWidget {
             } else {
               DOString = "";
             }
+
+            if (TDS == 0) {
+              TDSString = "Not Saline";
+            } else if (TDS > 0) {
+              TDSString = "Saline";
+            } else {
+              TDSString = "";
+            }
+
             // notification.showNotifier(id: 0, body: "hello", title: "New");
             return Expanded(
               child: isPortrait
@@ -144,11 +154,13 @@ class mainHomeList extends StatelessWidget {
                                     pondname: pondname,
                                   ),
                                   card2(
-                                    header: 'salanity',
+                                    header: 'salinity',
                                     val: TDS,
                                     sider: 'ppt',
-                                    centerWidget: circularIndicator(tds: TDS),
-                                    footer: TEMPString,
+                                    centerWidget: circularIndicator(
+                                        tds: double.parse(
+                                            (TDS).toStringAsFixed(2))),
+                                    footer: TDSString,
                                     systemname: system,
                                     pondname: pondname,
                                   ),
@@ -171,11 +183,13 @@ class mainHomeList extends StatelessWidget {
                                   )
                                 : TDSShow
                                     ? card1(
-                                        header: "salanity",
+                                        header: "salinity",
                                         displayVal: TDS,
                                         sideText: "ppt",
-                                        footer: PHString,
-                                        sidewidget: circularIndicator(tds: TDS),
+                                        footer: TDSString,
+                                        sidewidget: circularIndicator(
+                                            tds: double.parse(
+                                                (TDS).toStringAsFixed(2))),
                                         systemname: system,
                                         pondname: pondname,
                                       )
@@ -231,7 +245,7 @@ class mainHomeList extends StatelessWidget {
                           Visibility(
                             visible: TDSShow,
                             child: card2(
-                              header: 'salanity',
+                              header: 'salinity',
                               val: TDS,
                               sider: 'ppt',
                               centerWidget: circularIndicator(tds: TDS),
